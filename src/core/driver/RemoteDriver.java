@@ -94,8 +94,13 @@ public class RemoteDriver {
 			fis.setVariable("angle", angle);
 
 			fis.evaluate();
-			double offset = fis.getVariable("offset").defuzzify();
-			System.out.println("offset is " + offset);
+			/*
+			 * Send driving action ("usando volante").
+			 * See definition for Fuzzy Classes for 'volante'
+			 * at prototype-fuzzy.fcl.
+			 */
+			double offset = fis.getVariable("volante").defuzzify();
+			System.out.println("volante value: " + offset);
 
 			/*
 			 * Send driving action ("usando volante").
@@ -114,5 +119,4 @@ public class RemoteDriver {
 		stdIn.close();
 		kkSocket.close();
 	}
-
 }

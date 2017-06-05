@@ -7,40 +7,40 @@ VAR_INPUT
 END_VAR
 
 VAR_OUTPUT
-  offset : REAL;
+  volante : REAL;
 END_VAR
 
 FUZZIFY x
-  TERM left   := (0, 1) (0.35, 0.5) (0.5, 0);
-  TERM center := TRAPE 0.0 0.45 0.55 1;
-  TERM right  := (0.5, 0) (0.65, 0.5) (1, 1);
+  TERM esquerda   := (0, 1) (0.35, 0.5) (0.5, 0);
+  TERM centro := TRAPE 0.0 0.45 0.55 1;
+  TERM direita  := (0.5, 0) (0.65, 0.5) (1, 1);
 END_FUZZIFY
 
 FUZZIFY y
-  TERM top    := TRAPE 0 0 0 0.3;
-  TERM center := TRAPE 0.25 0.45 0.55 0.75;
-  TERM bottom := TRAPE 0.7 1 1 1;
+  TERM topo    := TRAPE 0 0 0 0.3;
+  TERM centro  := TRAPE 0.25 0.45 0.55 0.75;
+  TERM bottom  := TRAPE 0.7 1 1 1;
 END_FUZZIFY
 
 FUZZIFY angle
-  TERM east  := (0, 1) (2.5, 1) (90, 0) (270, 0) (357.5, 1) (360, 1);
-  TERM west  := TRAPE 90 177.5 182.5 270;
-  TERM north := TRAPE 0 87.5 92.5 180;
-  TERM south := TRAPE 180 267.5 272.5 360;
-  TERM northeast := TRAPE 0 30 60 90;
-  TERM northwest := TRAPE 90 120 150 180;
-  TERM southeast := TRAPE 270 300 330 360;
-  TERM southwest := TRAPE 180 210 240 270;
+  TERM leste    := (0, 1) (2.5, 1) (90, 0) (270, 0) (357.5, 1) (360, 1);
+  TERM oeste    := TRAPE 90 177.5 182.5 270;
+  TERM norte    := TRAPE 0 87.5 92.5 180;
+  TERM sul      := TRAPE 180 267.5 272.5 360;
+  TERM nordeste := TRAPE 0 30 60 90;
+  TERM noroeste := TRAPE 90 120 150 180;
+  TERM sudeste  := TRAPE 270 300 330 360;
+  TERM sudoeste := TRAPE 180 210 240 270;
 END_FUZZIFY
 
-DEFUZZIFY offset
-  TERM negative := TRAPE -1 -1 -0.3 0;
-  TERM zero     := TRAPE -0.5 -0.1 0.1 0.5;
-  TERM positive := TRAPE 0 0.3 1 1;
-  // In the list of fuzzy methods there is one called center of area
+DEFUZZIFY volante
+  TERM esterce_menos := TRAPE -1 -1 -0.3 0;
+  TERM esterce_nada     := TRAPE -0.5 -0.1 0.1 0.5;
+  TERM esterce_mais  := TRAPE 0 0.3 1 1;
+  // In the list of fuzzy methods there is one called centro of area
   // https://en.wikipedia.org/wiki/Defuzzification
-  METHOD        : COA;
-  DEFAULT       := 0;
+  METHOD             : COA;
+  DEFAULT            := 0;
 END_DEFUZZIFY
 
 RULEBLOCK No1
@@ -48,24 +48,25 @@ RULEBLOCK No1
   ACT  : MIN;         // Use 'min' activation method
   ACCU : MAX;         // Use 'max' accumulation method
 
-  RULE 1  : IF x IS left AND angle IS east  THEN offset IS positive;
-  RULE 2  : IF x IS left AND angle IS north THEN offset IS positive;
-  RULE 3  : IF x IS left AND angle IS west  THEN offset IS zero;
-  RULE 4  : IF x IS left AND angle IS south THEN offset IS negative;
-  RULE 5  : IF x IS left AND angle IS southeast THEN offset IS negative;
-  RULE 6  : IF x IS left AND angle IS northeast THEN offset IS positive;
-  RULE 7  : IF x IS left AND angle IS southwest THEN offset IS negative;
-  RULE 8  : IF x IS left AND angle IS northwest THEN offset IS zero;
+  RULE 1  : IF x IS esquerda AND angle IS leste  THEN volante IS esterce_mais;
+  RULE 2  : IF x IS esquerda AND angle IS norte THEN volante IS esterce_mais;
+  RULE 3  : IF x IS esquerda AND angle IS oeste  THEN volante IS esterce_nada;
+  RULE 4  : IF x IS esquerda AND angle IS sul THEN volante IS esterce_menos;
+  RULE 5  : IF x IS esquerda AND angle IS sudeste THEN volante IS esterce_menos;
+  RULE 6  : IF x IS esquerda AND angle IS nordeste THEN volante IS esterce_mais;
+  RULE 7  : IF x IS esquerda AND angle IS sudoeste THEN volante IS esterce_menos;
+  RULE 8  : IF x IS esquerda AND angle IS noroeste THEN volante IS esterce_nada;
 
-  RULE 9  : IF x IS center AND angle IS east THEN offset IS positive;
-  RULE 10 : IF x IS center AND angle IS west THEN offset IS negative;
-  RULE 11 : IF x IS center AND angle IS northeast THEN offset IS positive;
-  RULE 12 : IF x IS center AND angle IS northwest THEN offset IS negative;
+  RULE 9  : IF x IS centro AND angle IS leste THEN volante IS esterce_mais;
+  RULE 10 : IF x IS centro AND angle IS oeste THEN volante IS esterce_menos;
+  RULE 11 : IF x IS centro AND angle IS nordeste THEN volante IS esterce_mais;
+  RULE 12 : IF x IS centro AND angle IS noroeste THEN volante IS esterce_menos;
 
-  RULE 13 : IF x IS right AND angle IS east THEN offset IS zero;
-  RULE 14 : IF x IS right AND angle IS north THEN offset IS negative;
-  RULE 15 : IF x IS right AND angle IS west THEN offset IS positive;
-  RULE 16 : IF x IS right AND angle IS south THEN offset IS positive;
+  RULE 13 : IF x IS direita AND angle IS leste THEN volante IS esterce_nada;
+  RULE 14 : IF x IS direita AND angle IS norte THEN volante IS esterce_menos;
+  RULE 15 : IF x IS direita AND angle IS oeste THEN volante IS esterce_mais;
+  RULE 16 : IF x IS direita AND angle IS sul THEN volante IS esterce_mais;
 
 END_RULEBLOCK
+
 END_FUNCTION_BLOCK
