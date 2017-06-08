@@ -1,3 +1,5 @@
+package core.server;
+
 import java.awt.*;
 import java.awt.event.*;
 

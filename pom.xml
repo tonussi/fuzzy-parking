@@ -25,5 +25,13 @@
 			<artifactId>jgoodies-forms</artifactId>
 			<version>1.9.0</version>
 		</dependency>
+		
+ 	<dependency>
+        	<groupId>net.sf.jfuzzylogic</groupId>
+        	<artifactId>jfuzzylogic</artifactId>
+        	<scope>system</scope>
+        	<version>2.1</version>
+        	<systemPath>${project.basedir}/lib/jFuzzyLogic.jar</systemPath>
+    	</dependency>
 	</dependencies>
 </project>

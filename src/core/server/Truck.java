@@ -1,3 +1,5 @@
+package core.server;
+
 import java.awt.Point;
 
 public class Truck {

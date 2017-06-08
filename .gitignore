@@ -31,10 +31,10 @@ local.properties
 
 # sbteclipse plugin
 .target
+/target
 
 # Mac
 *.DS_Store
 
 # JetBrains
 .idea
-
