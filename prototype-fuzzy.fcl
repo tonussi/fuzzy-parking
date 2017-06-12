@@ -35,7 +35,7 @@ END_FUZZIFY
 
 DEFUZZIFY volante
   TERM esterce_menos := TRAPE -1 -1 -0.3 0;
-  TERM esterce_nada     := TRAPE -0.5 -0.1 0.1 0.5;
+  TERM esterce_nada  := TRAPE -0.5 -0.1 0.1 0.5;
   TERM esterce_mais  := TRAPE 0 0.3 1 1;
   // In the list of fuzzy methods there is one called centro of area
   // https://en.wikipedia.org/wiki/Defuzzification
