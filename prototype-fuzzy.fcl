@@ -12,7 +12,7 @@ END_VAR
 
 FUZZIFY x
   TERM esquerda   := (0, 1) (0.35, 0.5) (0.5, 0);
-  TERM centro := TRAPE 0.4 0.45 0.55 0.7;
+  TERM centro := TRAPE 0.4 0.45 0.55 0.6;
   TERM direita  := (0.5, 0) (0.65, 0.5) (1, 1);
 END_FUZZIFY
 
@@ -63,6 +63,7 @@ RULEBLOCK No1
   RULE 11  : IF x IS esquerda AND y IS longe AND angle IS nordeste THEN volante IS vira_para_esquerda;
 
   RULE 12  : IF x IS centro AND angle IS leste THEN volante IS vira_para_esquerda;
+  
   RULE 13 : IF x IS centro AND angle IS oeste THEN volante IS vira_para_direita;
   RULE 14 : IF x IS centro AND angle IS nordeste THEN volante IS vira_para_esquerda;
   RULE 15 : IF x IS centro AND angle IS noroeste THEN volante IS vira_para_direita;
@@ -78,6 +79,11 @@ RULEBLOCK No1
   RULE 24  : IF x IS direita AND y IS longe AND angle IS oeste  THEN volante IS vira_para_direita;
   RULE 25  : IF x IS direita AND y IS longe AND angle IS norte THEN volante IS vira_para_direita;
   RULE 26  : IF x IS direita AND y IS longe AND angle IS noroeste THEN volante IS vira_para_direita;
+  
+  RULE 27 :	IF x IS centro OR x IS direita AND angle IS sudeste THEN volante IS vira_para_esquerda;
+  RULE 28 :	IF x IS centro OR x IS direita AND angle IS sudoeste THEN volante IS vira_para_esquerda;
+  RULE 29 :	IF x IS centro OR x IS esquerda AND angle IS sudoeste THEN volante IS vira_para_direita;
+  RULE 30 :	IF x IS centro OR x IS esquerda AND angle IS sudeste THEN volante IS vira_para_direita;
 
 END_RULEBLOCK
 
