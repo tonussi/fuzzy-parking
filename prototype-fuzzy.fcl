@@ -12,31 +12,32 @@ END_VAR
 
 FUZZIFY x
   TERM esquerda   := (0, 1) (0.35, 0.5) (0.5, 0);
-  TERM centro := TRAPE 0.0 0.45 0.55 1;
+  TERM centro     := TRIAN 0.0 0.5 1;
   TERM direita  := (0.5, 0) (0.65, 0.5) (1, 1);
 END_FUZZIFY
 
+
 FUZZIFY y
-  TERM topo    := TRAPE 0 0 0 0.3;
-  TERM centro  := TRAPE 0.25 0.45 0.55 0.75;
-  TERM bottom  := TRAPE 0.7 1 1 1;
+  TERM longe    := TRAPE 0 0.3 0.6 0.8;
+  TERM perto  := TRAPE 0.6 0.75 0.85 1;
 END_FUZZIFY
+
 
 FUZZIFY angle
   TERM leste    := (0, 1) (2.5, 1) (90, 0) (270, 0) (357.5, 1) (360, 1);
-  TERM oeste    := TRAPE 90 177.5 182.5 270;
-  TERM norte    := TRAPE 0 87.5 92.5 180;
-  TERM sul      := TRAPE 180 267.5 272.5 360;
-  TERM nordeste := TRAPE 0 30 60 90;
-  TERM noroeste := TRAPE 90 120 150 180;
-  TERM sudeste  := TRAPE 270 300 330 360;
-  TERM sudoeste := TRAPE 180 210 240 270;
+  TERM oeste    := TRIAN 90 177.5 270;
+  TERM norte    := TRIAN 0 87.5 180;
+  TERM sul      := TRIAN 180 267.5 360;
+  TERM nordeste := TRIAN 0 30 90;
+  TERM noroeste := TRIAN 90 120 180;
+  TERM sudeste  := TRIAN 270 300 360;
+  TERM sudoeste := TRIAN 180 210 270;
 END_FUZZIFY
 
 DEFUZZIFY volante
-  TERM esterce_menos := TRAPE -1 -1 -0.3 0;
-  TERM esterce_nada  := TRAPE -0.5 -0.1 0.1 0.5;
-  TERM esterce_mais  := TRAPE 0 0.3 1 1;
+  TERM vira_para_direita := TRIAN -1 -0.8 0;
+  TERM vira_nada     := TRIAN -0.5 -0.1 0.5;
+  TERM vira_para_esquerda  := TRIAN 0 0.8 1;
   // In the list of fuzzy methods there is one called centro of area
   // https://en.wikipedia.org/wiki/Defuzzification
   METHOD             : COA;
@@ -48,24 +49,35 @@ RULEBLOCK No1
   ACT  : MIN;         // Use 'min' activation method
   ACCU : MAX;         // Use 'max' accumulation method
 
-  RULE 1  : IF x IS esquerda AND angle IS leste  THEN volante IS esterce_mais;
-  RULE 2  : IF x IS esquerda AND angle IS norte THEN volante IS esterce_mais;
-  RULE 3  : IF x IS esquerda AND angle IS oeste  THEN volante IS esterce_nada;
-  RULE 4  : IF x IS esquerda AND angle IS sul THEN volante IS esterce_menos;
-  RULE 5  : IF x IS esquerda AND angle IS sudeste THEN volante IS esterce_menos;
-  RULE 6  : IF x IS esquerda AND angle IS nordeste THEN volante IS esterce_mais;
-  RULE 7  : IF x IS esquerda AND angle IS sudoeste THEN volante IS esterce_menos;
-  RULE 8  : IF x IS esquerda AND angle IS noroeste THEN volante IS esterce_nada;
+  RULE 1  : IF x IS esquerda AND y IS perto AND angle IS leste  THEN volante IS vira_para_direita;
+  RULE 2  : IF x IS esquerda AND y IS perto  AND angle IS norte THEN volante IS vira_para_esquerda;
+  RULE 3  : IF x IS esquerda AND y IS perto AND angle IS nordeste THEN volante IS vira_para_direita;
+  RULE 4  : IF x IS esquerda AND angle IS noroeste THEN volante IS vira_nada;
+  RULE 5  : IF x IS esquerda AND angle IS oeste  THEN volante IS vira_nada;
+  RULE 6  : IF x IS esquerda AND angle IS sul THEN volante IS vira_para_direita;
+  RULE 7  : IF x IS esquerda AND angle IS sudeste THEN volante IS vira_para_direita;
+  RULE 8  : IF x IS esquerda AND angle IS sudoeste THEN volante IS vira_para_direita;
 
-  RULE 9  : IF x IS centro AND angle IS leste THEN volante IS esterce_mais;
-  RULE 10 : IF x IS centro AND angle IS oeste THEN volante IS esterce_menos;
-  RULE 11 : IF x IS centro AND angle IS nordeste THEN volante IS esterce_mais;
-  RULE 12 : IF x IS centro AND angle IS noroeste THEN volante IS esterce_menos;
+  RULE 9  : IF x IS esquerda AND y IS longe AND angle IS leste  THEN volante IS vira_para_esquerda;
+  RULE 10  : IF x IS esquerda AND y IS longe AND angle IS norte THEN volante IS vira_para_esquerda;
+  RULE 11  : IF x IS esquerda AND y IS longe AND angle IS nordeste THEN volante IS vira_para_esquerda;
 
-  RULE 13 : IF x IS direita AND angle IS leste THEN volante IS esterce_nada;
-  RULE 14 : IF x IS direita AND angle IS norte THEN volante IS esterce_menos;
-  RULE 15 : IF x IS direita AND angle IS oeste THEN volante IS esterce_mais;
-  RULE 16 : IF x IS direita AND angle IS sul THEN volante IS esterce_mais;
+  RULE 12  : IF x IS centro AND angle IS leste THEN volante IS vira_para_esquerda;
+  RULE 13 : IF x IS centro AND angle IS oeste THEN volante IS vira_para_direita;
+  RULE 14 : IF x IS centro AND angle IS nordeste THEN volante IS vira_para_esquerda;
+  RULE 15 : IF x IS centro AND angle IS noroeste THEN volante IS vira_para_direita;
+
+  RULE 16  : IF x IS direita AND y IS perto AND angle IS oeste  THEN volante IS vira_para_esquerda;
+  RULE 17 : IF x IS direita AND y IS perto  AND angle IS norte THEN volante IS vira_para_direita;
+  RULE 18  : IF x IS direita AND y IS perto AND angle IS noroeste THEN volante IS vira_para_esquerda;
+  RULE 19  : IF x IS direita AND angle IS nordeste THEN volante IS vira_nada;
+  RULE 20  : IF x IS direita AND angle IS leste THEN volante IS vira_nada;
+  RULE 21  : IF x IS direita AND angle IS sul THEN volante IS vira_para_esquerda;
+  RULE 22 : IF x IS direita AND angle IS sudeste THEN volante IS vira_para_esquerda;
+  RULE 23  : IF x IS direita AND angle IS sudoeste THEN volante IS vira_para_esquerda;
+  RULE 24  : IF x IS direita AND y IS longe AND angle IS oeste  THEN volante IS vira_para_direita;
+  RULE 25  : IF x IS direita AND y IS longe AND angle IS norte THEN volante IS vira_para_direita;
+  RULE 26  : IF x IS direita AND y IS longe AND angle IS noroeste THEN volante IS vira_para_direita;
 
 END_RULEBLOCK
 
