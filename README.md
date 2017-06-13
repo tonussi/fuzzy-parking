@@ -46,3 +46,15 @@ CONTENDO INTRODUÇÃO, DESENVOLVIMENTO E CONCLUSÃO ONDE DEVEM CONSTAR:
 - Quais as regras utilizadas;
 - Métdodo de defuzzificação utilizado;
 - Dificuldades encontradas e como elas foram superadas.
+
+# Eclipse
+
+Incorpore o Maven ao projeto no seu Eclipse.
+
+# JFuzzyLogic
+
+Entre no site http://jfuzzylogic.sourceforge.net/html/index.html
+e baixe o Core do projeto. Abra o Core do projeto no seu Eclipse
+e adicione ele como dependência para esse projeto aqui. Você
+pode também adicionar o .jar do JFuzzyLogic no projeto.
+
